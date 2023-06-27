@@ -5,10 +5,8 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  callbacks: {
-    redirect(params) {
-      return params.baseUrl;
-    },
+  jwt: {
+    maxAge: 30,
   },
   providers: [
     CredentialsProvider({
@@ -27,4 +25,20 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      if (user) token = user as unknown as { [key: string]: any };
+      console.log(new Date().toLocaleTimeString());
+      console.log(token);
+
+      console.log(new Date((token["exp"] as number) * 1000));
+
+      return token;
+    },
+    session: async ({ session, token }) => {
+      session.user = { ...token };
+      return session;
+    },
+  },
+  secret: "supersecret",
 };

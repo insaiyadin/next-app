@@ -10,6 +10,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Providers from "../Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,7 +41,7 @@ export default async function RootLayout({
           <br />
           {session?.user?.email} {session?.expires}
         </section>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
