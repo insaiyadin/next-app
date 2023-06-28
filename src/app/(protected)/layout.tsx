@@ -1,16 +1,12 @@
-import {
-  LoginButton,
-  LogoutButton,
-  ProfileButton,
-  RegisterButton,
-} from "@/components/buttons";
+import { LogoutButton, ProfileButton } from "@/components/buttons";
 import "../globals.css";
 import { Inter } from "next/font/google";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import Providers from "../Providers";
+import { signOut } from "next-auth/react";
+import Providers from "../SessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +23,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/api/auth/signin");
+    return redirect("/api/auth/signin");
   }
 
   return (
@@ -35,11 +31,10 @@ export default async function RootLayout({
       <body className={inter.className}>
         <section>
           <Link href="/">Home</Link>
-          <LogoutButton />
           <Link href="/protected">Protected</Link>
           <ProfileButton />
           <br />
-          {session?.user?.email} {session?.expires}
+          {session?.user?.email}
         </section>
         <Providers>{children}</Providers>
       </body>
